@@ -7,7 +7,7 @@ type Entry = {
   hours: number
 }
 
-export default function App() {
+function App() {
   const [entries, setEntries] = useState<Entry[]>([])
   const [date, setDate] = useState("")
   const [start, setStart] = useState("")
@@ -35,6 +35,23 @@ export default function App() {
   return (
     <div style={{ padding: 20, maxWidth: 500, margin: "auto", fontFamily: "Arial" }}>
       <h2>📋 Controle de Turnos — Vigia</h2>
+
+      <div>
+        <input type="date" value={date} onChange={e => setDate(e.target.value)} />
+      </div>
+
+      <div>
+        <input type="time" value={start} onChange={e => setStart(e.target.value)} />
+        <input type="time" value={end} onChange={e => setEnd(e.target.value)} />
+      </div>
+
+      <button onClick={addEntry}>Adicionar Turno</button>
+
+      <hr />
+
+      <div>
+        {entries.map((e, i) => (
+          <div      <h2>📋 Controle de Turnos — Vigia</h2>
 
       <input type="date" value={date} onChange={e => setDate(e.target.value)} />
       <br /><br />
