@@ -1,40 +1,48 @@
 import { useState } from "react";
+import "./App.css";
 
 export default function App() {
-  const [entries, setEntries] = useState<any[]>([]);
-  const [date, setDate] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  const [data, setData] = useState("");
+  const [entrada, setEntrada] = useState("");
+  const [saida, setSaida] = useState("");
+  const [turnos, setTurnos] = useState<any[]>([]);
 
-  const addEntry = () => {
-    if (!date || !start || !end) return;
+  function adicionar() {
+    if (!data || !entrada || !saida) return alert("Preencha tudo");
 
-    const startTime = new Date(date + "T" + start);
-    let endTime = new Date(date + "T" + end);
+    const h1 = Number(entrada.split(":")[0]) + Number(entrada.split(":")[1]) / 60;
+    const h2 = Number(saida.split(":")[0]) + Number(saida.split(":")[1]) / 60;
 
-    if (endTime < startTime) {
-      endTime.setDate(endTime.getDate() + 1);
-    }
+    if (h2 <= h1) return alert("Saída inválida");
 
-    const hours = (endTime.getTime() - startTime.getTime()) / 36e5;
+    const horas = h2 - h1;
 
-    setEntries([...entries, { date, start, end, hours }]);
-  };
+    setTurnos([...turnos, { data, entrada, saida, horas }]);
+  }
 
-  const total = entries.reduce((s, e) => s + e.hours, 0);
+  const total = turnos.reduce((s, t) => s + t.horas, 0).toFixed(2);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2>Registro de Ponto – Vigia</h2>
+    <div className="app">
+      <h1>Registro de Ponto</h1>
 
-      <label>Data</label><br />
-      <input type="date" value={date} onChange={e => setDate(e.target.value)} /><br /><br />
+      <div className="card">
+        <input type="date" value={data} onChange={e => setData(e.target.value)} />
+        <input type="time" value={entrada} onChange={e => setEntrada(e.target.value)} />
+        <input type="time" value={saida} onChange={e => setSaida(e.target.value)} />
+        <button onClick={adicionar}>Adicionar turno</button>
+      </div>
 
-      <label>Entrada</label><br />
-      <input type="time" value={start} onChange={e => setStart(e.target.value)} /><br /><br />
+      <div className="card">
+        {turnos.map((t, i) => (
+          <p key={i}>{t.data} • {t.entrada} → {t.saida} = {t.horas.toFixed(2)}h</p>
+        ))}
+      </div>
 
-      <label>Saída</label><br />
-      <input type="time" value={end} onChange={e => setEnd(e.target.value)} /><br /><br />
+      <h2>Total: {total} horas</h2>
+    </div>
+  );
+}      <input type="time" value={end} onChange={e => setEnd(e.target.value)} /><br /><br />
 
       <button onClick={addEntry}>Adicionar turno</button>
 
