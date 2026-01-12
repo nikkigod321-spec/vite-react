@@ -8,34 +8,40 @@ type Entry = {
 }
 
 export default function App() {
-  const [entries, setEntries] = useState<Entry[]>([])
+  // Carrega do localStorage se houver, senão vazio
+  const [entries, setEntries] = useState<Entry[]>(() => {
+    const saved = localStorage.getItem("entries")
+    return saved ? JSON.parse(saved) : []
+  })
   const [date, setDate] = useState("")
   const [start, setStart] = useState("")
   const [end, setEnd] = useState("")
 
-  // Adiciona uma nova entrada
+  // Adiciona uma entrada
   function addEntry() {
     if (!date || !start || !end) return
 
     const startTime = new Date(`${date}T${start}`)
     let endTime = new Date(`${date}T${end}`)
 
-    if (endTime < startTime) {
-      endTime.setDate(endTime.getDate() + 1)
-    }
+    if (endTime < startTime) endTime.setDate(endTime.getDate() + 1)
 
     const hours = (endTime.getTime() - startTime.getTime()) / 36e5
-    setEntries([...entries, { date, start, end, hours }])
+
+    const newEntries = [...entries, { date, start, end, hours }]
+    setEntries(newEntries)
+    localStorage.setItem("entries", JSON.stringify(newEntries)) // salva
     setStart("")
     setEnd("")
   }
 
-  // Reseta todas as entradas
+  // Reseta todos os turnos
   function resetWeek() {
     setEntries([])
     setDate("")
     setStart("")
     setEnd("")
+    localStorage.removeItem("entries") // limpa armazenamento
   }
 
   const total = entries.reduce((sum, e) => sum + e.hours, 0)
