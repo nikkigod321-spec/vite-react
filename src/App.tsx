@@ -7,7 +7,7 @@ type Entry = {
   hours: number
 }
 
-function App() {
+export default function App() {
   const [entries, setEntries] = useState<Entry[]>([])
   const [date, setDate] = useState("")
   const [start, setStart] = useState("")
@@ -26,8 +26,6 @@ function App() {
     const hours = (endTime.getTime() - startTime.getTime()) / 36e5
 
     setEntries([...entries, { date, start, end, hours }])
-    setStart("")
-    setEnd("")
   }
 
   const total = entries.reduce((sum, e) => sum + e.hours, 0)
@@ -35,6 +33,20 @@ function App() {
   return (
     <div style={{ padding: 20, maxWidth: 500, margin: "auto", fontFamily: "Arial" }}>
       <h2>📋 Controle de Turnos — Vigia</h2>
+
+      <input type="date" value={date} onChange={e => setDate(e.target.value)} />
+      <br /><br />
+
+      <input type="time" value={start} onChange={e => setStart(e.target.value)} />
+      <input type="time" value={end} onChange={e => setEnd(e.target.value)} />
+      <br /><br />
+
+      <button onClick={addEntry}>Adicionar Turno</button>
+
+      <hr />
+
+      {entries.map((e, i) => (
+        <div key      <h2>📋 Controle de Turnos — Vigia</h2>
 
       <div>
         <input type="date" value={date} onChange={e => setDate(e.target.value)} />
